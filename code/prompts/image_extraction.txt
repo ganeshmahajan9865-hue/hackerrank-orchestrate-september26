@@ -1,0 +1,1 @@
+Extract the financial transaction details (amount, currency, date, merchant/description) from this document image. Return valid JSON only.

@@ -1,0 +1,1 @@
+Extract financial updates (amount change, date change, status change, cancellation) from this text message. Return valid JSON only.
