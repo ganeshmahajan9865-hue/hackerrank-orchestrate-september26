@@ -191,3 +191,149 @@ Before submitting, confirm:
 - Every `amount_safe_to_pay` satisfies `0 <= amount_safe_to_pay <= requested_amount`.
 - Every installment plan matches a supplied payment option, and every spending change targets a flexible recurring expense.
 - Your runnable code, setup instructions, and `evaluation/` folder are included in `code.zip`.
+
+---
+
+## Retrieval-Augmented Generation (RAG) Subsystem
+
+### What is RAG and Why is it Used?
+Retrieval-Augmented Generation (RAG) couples domain-specific external knowledge retrieval with text generation. In the "Buy or Wait?" system, RAG is integrated strictly as an **explanation enrichment layer** following the deterministic decision:
+1. **Explainability:** Transforms raw figures and statuses into grounded justifications citing financial principles (e.g. the 50/30/20 rule, installment obligation risks, or the strategic value of delaying purchases until confirmed income settles).
+2. **Strict Financial Safety:** RAG **never** calculates or overrides financial decisions. The 90-day cash forecast, safe amount calculation, and ranking hierarchy execute purely in deterministic Python.
+
+### RAG Architecture
+
+```text
+User Request & Profile
+       ↓
+Deterministic Financial Engine (90-Day Simulation & Constraint Ranking)
+       ↓
+Financial Decision (Status, Safe Amount, Plan, Earliest Date, Spending Changes)
+       ↓
+Decision-Aware RAG Retriever (Routes topic filters & queries based on decision)
+       ↓
+Local Vector Store (16 Curated Documents / 38 Chunks with Cosine Similarity)
+       ↓
+Context Builder (Immutable Facts + Sanitized Supporting Guidance)
+       ↓
+Grounded Explanation Generator (RAG Synthesis with Automatic Fallback)
+       ↓
+Validator (Checks 8-Column Schema & Mathematical Invariants)
+       ↓
+output.csv
+```
+
+### Knowledge Base Structure (`knowledge/`)
+- `budgeting/`: 50/30/20 rule, zero-based cash allocation, 90-day cash flow forecasting.
+- `affordability/`: Safe-to-pay criteria, strategic delayed purchases (wait strategy), opportunity cost.
+- `payment_methods/`: Responsible installment management, benefits of full upfront payment, partial payment terms.
+- `emergency_fund/`: Untouchable minimum balance buffer, accounting for unforeseen variable expenses.
+- `spending/`: Protected essentials vs. discretionary spending, reducing flexible expenses, subscription audits.
+- `financial_terms/`: Affordability status definitions (`affordable_now`, `affordable_with_plan`, `affordable_later`, `not_affordable`) and payment plan notation.
+
+### Vector Store & Indexing
+- **Embedding Engine:** Normalized TF-IDF vectorizer with sublinear term-frequency scaling and L2 normalization (`src/rag/embeddings.py`). Runs 100% offline in milliseconds without external API keys or heavy C-dependencies.
+- **Vector Store:** In-memory matrix with cosine similarity search and metadata filtering (`src/rag/vector_store.py`).
+- **Persistent Index:** Serialized to `knowledge/index.json` on initial build; automatically reloaded on subsequent runs to prevent redundant re-indexing.
+
+### Decision-Aware Retrieval Routing
+Retrieval queries and topic categories are dynamically routed based on the computed decision:
+- `affordable_now` → Prioritizes `affordability`, `payment_methods`, and `budgeting` (upfront payment benefits and emergency buffer protection).
+- `affordable_with_plan` → Prioritizes `payment_methods`, `spending`, and `financial_terms` (installment obligations and flexible spending adjustments).
+- `affordable_later` → Prioritizes `affordability`, `emergency_fund`, and `budgeting` (confirmed salary timing and avoiding financing costs).
+- `not_affordable` → Prioritizes `affordability`, `emergency_fund`, and `spending` (overdraft prevention and non-negotiable minimum balance floor).
+
+### Prompt Injection & Security Defense
+All external data (messages, transaction memos, and retrieved documents) are treated as untrusted:
+- `ContextBuilder.sanitize_text()` neutralizes adversarial prompt directives (e.g. *"ignore previous instructions"* or *"override decision"*).
+- Financial fields are passed as typed numeric primitives in an immutable payload.
+- System prompt enforces reference-only data interpretation.
+
+### Transparent Fallback Behavior
+If RAG is disabled (`use_rag=False`), if the knowledge index is missing, or if any component encounters an exception, the pipeline automatically falls back to deterministic rule-based explanation templates. The financial decision fields remain 100.0% identical in both cases.
+
+### Running the Project with RAG
+```bash
+# Run full pipeline with RAG enabled (Default)
+python code/main.py
+
+# Run RAG test suite (12 tests)
+pytest -v tests/test_rag.py
+
+# Verify mathematical invariance (RAG vs Non-RAG across 250 requests)
+python scripts/verify_rag_equivalence.py
+```
+
+---
+
+## What-If Purchase & Payment Simulator
+
+The What-If Purchase & Payment Simulator (`src/scenario_simulator.py`) allows users, advisors, and automated planning systems to test hypothetical purchase amounts and payment structures (Full Payment, Partial Payment, Installments, Wait) without mutating raw dataset files or altering core decision logic.
+
+### Simulator Architecture
+```text
+User Input:
+  - Base Request ID (e.g. 'request_01' or 'request_52')
+  - Hypothetical Purchase Amount(s) (e.g. ₹40,000, ₹60,000, ₹80,000)
+  - Simulated Payment Method(s) (full_payment, partial_payment, installments, wait, or specific option ID)
+                     ↓
+         ScenarioSimulator (src/scenario_simulator.py)
+                     ↓
+  ┌─────────────────────────────────────────────────────────┐
+  │ 1. Ephemeral Context Cloning (In-memory, zero mutation) │
+  │ 2. Payment Method & Eligibility Verification            │
+  │ 3. Existing ForecastEngine (90-day daily cash flow)     │
+  │ 4. Existing DecisionEngine (Candidate plan evaluation)  │
+  │ 5. Minimum Projected Balance & Cash Floor Tracking      │
+  │ 6. Grounded Natural-Language Explanation (via RAG)      │
+  └─────────────────────────────────────────────────────────┘
+                     ↓
+              ScenarioResult
+  (purchase_amount, payment_method, affordability_status,
+   amount_safe_to_pay, payment_plan, earliest_date_for_full_payment,
+   spending_changes_needed, minimum_projected_balance,
+   decision_explanation)
+                     ↓
+        Multi-Scenario Comparison & Ranking
+  (Ranks valid options using PRD Section 4.4 hierarchy to identify Best Scenario)
+```
+
+### Key Guarantees
+1. **Zero Algorithm Duplication:** Directly reuses `ForecastEngine`, `DecisionEngine`, `PaymentPlanEngine`, `CurrencyConverter`, and `ExplanationGenerator`.
+2. **Dataset Immutability:** Uses deep-copied in-memory contexts. Never modifies original CSV files.
+3. **Deterministic Evaluation:** Simulation and minimum projected balance calculations execute 100% deterministically in Python. RAG provides grounded natural-language explanations.
+4. **Section 4.4 Safe-Plan Ranking:** When comparing multiple scenarios, ranks using the exact PRD hierarchy (deadline compliance, minimal spending changes, minimal cost, earlier start date, fewer payments).
+
+### Running Simulator Tests & Demonstrations
+```bash
+# Run the 11 simulator test cases (covers small/medium/large amounts, methods, invalid inputs, ranking, immutability)
+pytest -v tests/test_scenario_simulator.py
+
+# Run interactive 6-scenario demonstration
+python scripts/demo_simulator.py request_01
+python scripts/demo_simulator.py request_52
+```
+
+### Python API Example
+```python
+from src.scenario_simulator import ScenarioSimulator, ScenarioSpec
+
+# Initialize simulator with existing engines
+simulator = ScenarioSimulator(joiner, reconstructor, forecast_engine, decision_engine, plan_engine, explanation_gen)
+
+# 1. Simulate a single scenario
+spec = ScenarioSpec(purchase_amount=60000.0, payment_method='full_payment')
+result = simulator.simulate_scenario('request_52', spec)
+print(f"Status: {result.affordability_status} | Min Balance: {result.minimum_projected_balance}")
+
+# 2. Compare multiple scenarios
+specs = [
+    ScenarioSpec(purchase_amount=60000.0, payment_method='full_payment', scenario_label='Full Payment'),
+    ScenarioSpec(purchase_amount=60000.0, payment_method='installments', scenario_label='Installments'),
+    ScenarioSpec(purchase_amount=60000.0, payment_method='wait', scenario_label='Wait')
+]
+comparison = simulator.simulate_scenarios('request_52', specs)
+print(comparison.to_markdown())
+print(f"Best Plan: {comparison.best_scenario.scenario_label}")
+```
+

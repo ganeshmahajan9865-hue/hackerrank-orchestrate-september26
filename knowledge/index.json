@@ -1,0 +1,498 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "delayed_purchases_01",
+      "source": "affordability/delayed_purchases.md",
+      "topic": "affordability",
+      "section": "Strategic Value of Delayed Purchases (Wait Strategy)",
+      "text": "# Strategic Value of Delayed Purchases (Wait Strategy)\n\nWhen a purchase cannot be paid safely today, waiting for upcoming confirmed income or recurring debt roll-offs is often the safest and most cost-effective recommendation.",
+      "metadata": {
+        "word_count": 33,
+        "source": "affordability/delayed_purchases.md",
+        "topic": "affordability",
+        "section": "Strategic Value of Delayed Purchases (Wait Strategy)"
+      }
+    },
+    {
+      "chunk_id": "delayed_purchases_02",
+      "source": "affordability/delayed_purchases.md",
+      "topic": "affordability",
+      "section": "When Waiting is Recommended",
+      "text": "- Confirmed Future Inflows: The user has verified, scheduled salary or guaranteed receivables arriving within the forecast window.\n- Eliminates Financing Costs: Waiting allows the user to pay in full later, bypassing interest charges, financing fees, and multi-month debt drag.\n- Earliest Safe Date: The system identifies the exact chronological day when accumulated net cash flow safely accommodates the entire cost while keeping the emergency buffer intact.",
+      "metadata": {
+        "word_count": 67,
+        "source": "affordability/delayed_purchases.md",
+        "topic": "affordability",
+        "section": "When Waiting is Recommended"
+      }
+    },
+    {
+      "chunk_id": "opportunity_cost_01",
+      "source": "affordability/opportunity_cost.md",
+      "topic": "affordability",
+      "section": "Evaluating Opportunity Cost and Priorities",
+      "text": "# Evaluating Opportunity Cost and Priorities\n\nEvery financial commitment consumes liquidity that could otherwise safeguard against emergencies, fund high-priority goals, or avoid expensive borrowing.",
+      "metadata": {
+        "word_count": 24,
+        "source": "affordability/opportunity_cost.md",
+        "topic": "affordability",
+        "section": "Evaluating Opportunity Cost and Priorities"
+      }
+    },
+    {
+      "chunk_id": "opportunity_cost_02",
+      "source": "affordability/opportunity_cost.md",
+      "topic": "affordability",
+      "section": "Key Considerations",
+      "text": "- Financial Priorities Alignment: Discretionary expenses should take lower precedence than scheduled savings goals and emergency reserves.\n- Irreversible Commitments: Paying cash upfront is irreversible; once deployed, liquidity cannot easily be retrieved if unexpected expenses occur.\n- Total Value Assessment: When a requested expenditure strains the financial buffer, recommending against the purchase (`not_recommended` / `not_affordable`) prevents long-term balance erosion.",
+      "metadata": {
+        "word_count": 59,
+        "source": "affordability/opportunity_cost.md",
+        "topic": "affordability",
+        "section": "Key Considerations"
+      }
+    },
+    {
+      "chunk_id": "safe_to_pay_criteria_01",
+      "source": "affordability/safe_to_pay_criteria.md",
+      "topic": "affordability",
+      "section": "Safe-to-Pay Determination Criteria",
+      "text": "# Safe-to-Pay Determination Criteria\n\nThe `amount_safe_to_pay` represents the maximum cash an individual can part with on the request date without triggering a cash flow shortfall over the next 90 days.",
+      "metadata": {
+        "word_count": 30,
+        "source": "affordability/safe_to_pay_criteria.md",
+        "topic": "affordability",
+        "section": "Safe-to-Pay Determination Criteria"
+      }
+    },
+    {
+      "chunk_id": "safe_to_pay_criteria_02",
+      "source": "affordability/safe_to_pay_criteria.md",
+      "topic": "affordability",
+      "section": "Core Affordability Standards",
+      "text": "- Preservation of Buffer: Balance must never dip below the user's required `minimum_balance_to_keep`.\n- Protection of Essentials: Ongoing payments for protected categories (rent, food, utilities, health) must remain 100% funded.\n- Upfront Limits: If the requested cost exceeds available headroom, `amount_safe_to_pay` equals the exact constrained headroom (bounded between 0 and the requested total).\n- True Affordability: An item is only `affordable_now` if the safe-to-pay amount covers 100% of the requested expense upfront.",
+      "metadata": {
+        "word_count": 72,
+        "source": "affordability/safe_to_pay_criteria.md",
+        "topic": "affordability",
+        "section": "Core Affordability Standards"
+      }
+    },
+    {
+      "chunk_id": "50_30_20_rule_01",
+      "source": "budgeting/50_30_20_rule.md",
+      "topic": "budgeting",
+      "section": "The 50/30/20 Budgeting Principle",
+      "text": "# The 50/30/20 Budgeting Principle\n\nThe 50/30/20 framework divides after-tax income into three essential categories:\n- 50% for Needs: Essential living obligations including rent, utilities, basic groceries, healthcare, and debt minimums.\n- 30% for Wants: Discretionary lifestyle spending such as dining out, recreation, travel, and personal upgrades.\n- 20% for Savings & Debt Acceleration: Emergency reserves, investments, and paying down debt balances.",
+      "metadata": {
+        "word_count": 62,
+        "source": "budgeting/50_30_20_rule.md",
+        "topic": "budgeting",
+        "section": "The 50/30/20 Budgeting Principle"
+      }
+    },
+    {
+      "chunk_id": "50_30_20_rule_02",
+      "source": "budgeting/50_30_20_rule.md",
+      "topic": "budgeting",
+      "section": "Core Rule for Purchases",
+      "text": "A major discretionary expenditure should never crowd out funds earmarked for monthly needs or minimum emergency liquidity. If an upfront payment threatens the 50% safety allocation for essential commitments over the next 90 days, the purchase must be deferred, split, or financed through affordable installments.",
+      "metadata": {
+        "word_count": 45,
+        "source": "budgeting/50_30_20_rule.md",
+        "topic": "budgeting",
+        "section": "Core Rule for Purchases"
+      }
+    },
+    {
+      "chunk_id": "cash_flow_forecasting_01",
+      "source": "budgeting/cash_flow_forecasting.md",
+      "topic": "budgeting",
+      "section": "Principles of 90-Day Cash Flow Forecasting",
+      "text": "# Principles of 90-Day Cash Flow Forecasting\n\nStatic balance checks are dangerous because a positive bank account today can turn into an overdraft tomorrow when pending or scheduled debits hit.",
+      "metadata": {
+        "word_count": 30,
+        "source": "budgeting/cash_flow_forecasting.md",
+        "topic": "budgeting",
+        "section": "Principles of 90-Day Cash Flow Forecasting"
+      }
+    },
+    {
+      "chunk_id": "cash_flow_forecasting_02",
+      "source": "budgeting/cash_flow_forecasting.md",
+      "topic": "budgeting",
+      "section": "Key Forecasting Rules",
+      "text": "1. Multi-Day Simulation: Model daily account balance trajectories across at least a 90-day forward-looking horizon.\n2. Conservative Timing: Confirmed salaries and recurring credits should only be credited on their verified settlement dates.\n3. Pending Debit Deduction: All pending authorizations, card holds, and in-flight transfers must be treated as already deducted.\n4. Trajectory Headroom: The lowest balance trough across the entire forecast window defines the true maximum safe expenditure headroom, not today's raw account balance.",
+      "metadata": {
+        "word_count": 74,
+        "source": "budgeting/cash_flow_forecasting.md",
+        "topic": "budgeting",
+        "section": "Key Forecasting Rules"
+      }
+    },
+    {
+      "chunk_id": "zero_based_budgeting_01",
+      "source": "budgeting/zero_based_budgeting.md",
+      "topic": "budgeting",
+      "section": "Zero-Based Cash Allocation",
+      "text": "# Zero-Based Cash Allocation\n\nZero-based budgeting assigns every unit of incoming cash a specific purpose before expenditure occurs:\n- Immediate Essential Reserves: Funds locked to cover known scheduled debits (rent, utilities, loan repayments).\n- Variable Essential Allowance: Buffer allocated for necessary variable expenses like food and transit.\n- Untouchable Safety Floor: The individual user's minimum balance threshold.\n- Unallocated Surplus: The only pool truly available for new discretionary purchases.",
+      "metadata": {
+        "word_count": 69,
+        "source": "budgeting/zero_based_budgeting.md",
+        "topic": "budgeting",
+        "section": "Zero-Based Cash Allocation"
+      }
+    },
+    {
+      "chunk_id": "zero_based_budgeting_02",
+      "source": "budgeting/zero_based_budgeting.md",
+      "topic": "budgeting",
+      "section": "Application to Large Expenses",
+      "text": "Before sanctioning any new financial commitment, the system verifies that upcoming scheduled debits and variable essential expenses are fully covered. When unallocated surplus is insufficient to absorb the full requested expense immediately, the purchase is not affordable today without compromising scheduled obligations.",
+      "metadata": {
+        "word_count": 42,
+        "source": "budgeting/zero_based_budgeting.md",
+        "topic": "budgeting",
+        "section": "Application to Large Expenses"
+      }
+    },
+    {
+      "chunk_id": "minimum_balance_buffer_01",
+      "source": "emergency_fund/minimum_balance_buffer.md",
+      "topic": "emergency_fund",
+      "section": "The Minimum Balance Buffer as an Emergency Reserve",
+      "text": "# The Minimum Balance Buffer as an Emergency Reserve\n\nThe `minimum_balance_to_keep` represents a non-negotiable financial floor. It protects the individual from account insolvency in the event of minor cash shocks or delayed paychecks.",
+      "metadata": {
+        "word_count": 33,
+        "source": "emergency_fund/minimum_balance_buffer.md",
+        "topic": "emergency_fund",
+        "section": "The Minimum Balance Buffer as an Emergency Reserve"
+      }
+    },
+    {
+      "chunk_id": "minimum_balance_buffer_02",
+      "source": "emergency_fund/minimum_balance_buffer.md",
+      "topic": "emergency_fund",
+      "section": "Hard Invariant Rule",
+      "text": "Under no circumstances may any payment plan, down payment, installment, or simulated essential expenditure cause the projected daily bank balance to drop below this minimum balance floor. Any proposal that violates this floor at any point during the 90-day forecast is mathematically deemed unsafe and rejected.",
+      "metadata": {
+        "word_count": 46,
+        "source": "emergency_fund/minimum_balance_buffer.md",
+        "topic": "emergency_fund",
+        "section": "Hard Invariant Rule"
+      }
+    },
+    {
+      "chunk_id": "unforeseen_expenses_01",
+      "source": "emergency_fund/unforeseen_expenses.md",
+      "topic": "emergency_fund",
+      "section": "Accounting for Unforeseen Expenses and Conservative Buffers",
+      "text": "# Accounting for Unforeseen Expenses and Conservative Buffers\n\nReal-world cash outflows frequently experience unpredictable friction: emergency medical needs, sudden car repairs, or variable utility spikes.",
+      "metadata": {
+        "word_count": 25,
+        "source": "emergency_fund/unforeseen_expenses.md",
+        "topic": "emergency_fund",
+        "section": "Accounting for Unforeseen Expenses and Conservative Buffers"
+      }
+    },
+    {
+      "chunk_id": "unforeseen_expenses_02",
+      "source": "emergency_fund/unforeseen_expenses.md",
+      "topic": "emergency_fund",
+      "section": "Conservative Principles",
+      "text": "- Variable Essential Estimation: Historical dining, grocery, and fuel expenditures are modeled conservatively.\n- Headroom Preservation: Running balance down to the exact dollar of minimum balance is inherently fragile; maintaining headroom provides resilience against volatile cash shocks.\n- Non-Cash Events: Unrealized investment holdings, crypto gains, or pending refunds do not constitute emergency cash reserves until fully settled and liquid in the user's primary checking account.",
+      "metadata": {
+        "word_count": 65,
+        "source": "emergency_fund/unforeseen_expenses.md",
+        "topic": "emergency_fund",
+        "section": "Conservative Principles"
+      }
+    },
+    {
+      "chunk_id": "affordability_definitions_01",
+      "source": "financial_terms/affordability_definitions.md",
+      "topic": "financial_terms",
+      "section": "Standard Affordability Status Classifications",
+      "text": "# Standard Affordability Status Classifications\n\nThe affordability framework classifies every purchase evaluation into one of four mutually exclusive statuses:",
+      "metadata": {
+        "word_count": 19,
+        "source": "financial_terms/affordability_definitions.md",
+        "topic": "financial_terms",
+        "section": "Standard Affordability Status Classifications"
+      }
+    },
+    {
+      "chunk_id": "affordability_definitions_02",
+      "source": "financial_terms/affordability_definitions.md",
+      "topic": "financial_terms",
+      "section": "1. `affordable_now`",
+      "text": "The entire purchase amount can be safely paid upfront in full on the request date while preserving all essential commitments and maintaining the required minimum balance floor throughout the entire 90-day simulation window.",
+      "metadata": {
+        "word_count": 33,
+        "source": "financial_terms/affordability_definitions.md",
+        "topic": "financial_terms",
+        "section": "1. `affordable_now`"
+      }
+    },
+    {
+      "chunk_id": "affordability_definitions_03",
+      "source": "financial_terms/affordability_definitions.md",
+      "topic": "financial_terms",
+      "section": "2. `affordable_with_plan`",
+      "text": "The purchase cannot be paid in full immediately, but can be safely completed through a structured installment plan, a compliant partial payment schedule, or by making permitted flexible spending reductions.",
+      "metadata": {
+        "word_count": 30,
+        "source": "financial_terms/affordability_definitions.md",
+        "topic": "financial_terms",
+        "section": "2. `affordable_with_plan`"
+      }
+    },
+    {
+      "chunk_id": "affordability_definitions_04",
+      "source": "financial_terms/affordability_definitions.md",
+      "topic": "financial_terms",
+      "section": "3. `affordable_later`",
+      "text": "The purchase cannot be safely started or split today, but the user has confirmed future cash inflows arriving before a safe future date where paying in full will not compromise the minimum balance.",
+      "metadata": {
+        "word_count": 33,
+        "source": "financial_terms/affordability_definitions.md",
+        "topic": "financial_terms",
+        "section": "3. `affordable_later`"
+      }
+    },
+    {
+      "chunk_id": "affordability_definitions_05",
+      "source": "financial_terms/affordability_definitions.md",
+      "topic": "financial_terms",
+      "section": "4. `not_affordable`",
+      "text": "The request cannot be safely serviced upfront, with any supplied installment plan, or on any projected date within the 90-day forecast horizon without dangerously breaching the minimum balance floor.",
+      "metadata": {
+        "word_count": 29,
+        "source": "financial_terms/affordability_definitions.md",
+        "topic": "financial_terms",
+        "section": "4. `not_affordable`"
+      }
+    },
+    {
+      "chunk_id": "payment_plan_terms_01",
+      "source": "financial_terms/payment_plan_terms.md",
+      "topic": "financial_terms",
+      "section": "Payment Plan Vocabulary and Formatting Rules",
+      "text": "# Payment Plan Vocabulary and Formatting Rules\n\nFinancial recommendations follow strict semantic conventions to ensure unambiguous execution by banking systems and consumer users.",
+      "metadata": {
+        "word_count": 23,
+        "source": "financial_terms/payment_plan_terms.md",
+        "topic": "financial_terms",
+        "section": "Payment Plan Vocabulary and Formatting Rules"
+      }
+    },
+    {
+      "chunk_id": "payment_plan_terms_02",
+      "source": "financial_terms/payment_plan_terms.md",
+      "topic": "financial_terms",
+      "section": "Payment Plan Notation",
+      "text": "- Format: Chronological sequence of pipe-separated `YYYY-MM-DD:amount` tuples (e.g., `2026-04-06:268.74|2026-05-06:268.74|2026-06-05:268.74`).\n- Precision: All monetary figures formatted to exact decimal precision matching the user profile currency.\n- Sum Equivalence: The aggregate sum of all payments in the plan must strictly equal the total required payment obligation.\n- `none` Value: Used exclusively when no payment is scheduled or when the recommendation is `not_recommended`.",
+      "metadata": {
+        "word_count": 61,
+        "source": "financial_terms/payment_plan_terms.md",
+        "topic": "financial_terms",
+        "section": "Payment Plan Notation"
+      }
+    },
+    {
+      "chunk_id": "payment_plan_terms_03",
+      "source": "financial_terms/payment_plan_terms.md",
+      "topic": "financial_terms",
+      "section": "Earliest Full Payment Date",
+      "text": "The first conservative calendar date where a single lump-sum full payment is 100% safe without breaching minimum balance. For `affordable_now`, this is identical to `request_date`. For `not_affordable`, this field is left empty.",
+      "metadata": {
+        "word_count": 32,
+        "source": "financial_terms/payment_plan_terms.md",
+        "topic": "financial_terms",
+        "section": "Earliest Full Payment Date"
+      }
+    },
+    {
+      "chunk_id": "full_payment_benefits_01",
+      "source": "payment_methods/full_payment_benefits.md",
+      "topic": "payment_methods",
+      "section": "Advantages of Full Upfront Payment",
+      "text": "# Advantages of Full Upfront Payment\n\nWhen a purchase is safely affordable today without breaching the minimum balance, paying in full is the gold standard of financial recommendations.",
+      "metadata": {
+        "word_count": 28,
+        "source": "payment_methods/full_payment_benefits.md",
+        "topic": "payment_methods",
+        "section": "Advantages of Full Upfront Payment"
+      }
+    },
+    {
+      "chunk_id": "full_payment_benefits_02",
+      "source": "payment_methods/full_payment_benefits.md",
+      "topic": "payment_methods",
+      "section": "Key Advantages",
+      "text": "- Zero Financing Overhead: Avoids merchant interest, processing fees, and delayed penalties.\n- Cognitive and Cash Flow Simplicity: Clears the transaction from future cash flow tracking; no ongoing monthly payment commitments.\n- Certainty: Immediate settlement eliminates future default or late fee risks if income fluctuates.\n- Decision Guideline: Full payment is prioritized above installments whenever `amount_safe_to_pay >= requested_amount`.",
+      "metadata": {
+        "word_count": 58,
+        "source": "payment_methods/full_payment_benefits.md",
+        "topic": "payment_methods",
+        "section": "Key Advantages"
+      }
+    },
+    {
+      "chunk_id": "installments_01",
+      "source": "payment_methods/installments.md",
+      "topic": "payment_methods",
+      "section": "Managing Installment Payments Responsibly",
+      "text": "# Managing Installment Payments Responsibly\n\nInstallment payment plans spread an expense across multiple billing cycles, lowering the immediate liquidity drain.",
+      "metadata": {
+        "word_count": 20,
+        "source": "payment_methods/installments.md",
+        "topic": "payment_methods",
+        "section": "Managing Installment Payments Responsibly"
+      }
+    },
+    {
+      "chunk_id": "installments_02",
+      "source": "payment_methods/installments.md",
+      "topic": "payment_methods",
+      "section": "Criteria for Recommending Installments",
+      "text": "1. User Willingness: The user's profile must explicitly allow installments (`max_installment_months > 0`).\n2. Plan Duration Constraint: The plan duration cannot exceed the user's `max_installment_months`.\n3. Cumulative Cash Flow Feasibility: Each scheduled monthly payment must be fully survivable throughout the entire plan horizon without breaching the user's minimum balance threshold.\n4. Total Financing Cost: Shorter installment terms with lower aggregate interest/fees are strictly preferred over longer, more expensive options.",
+      "metadata": {
+        "word_count": 69,
+        "source": "payment_methods/installments.md",
+        "topic": "payment_methods",
+        "section": "Criteria for Recommending Installments"
+      }
+    },
+    {
+      "chunk_id": "partial_payment_terms_01",
+      "source": "payment_methods/partial_payment_terms.md",
+      "topic": "payment_methods",
+      "section": "Structure and Rules for Partial Payments",
+      "text": "# Structure and Rules for Partial Payments\n\nA partial payment splits a purchase into two discrete installments: a safe down payment today, followed by the remaining balance on the earliest safe future date.",
+      "metadata": {
+        "word_count": 33,
+        "source": "payment_methods/partial_payment_terms.md",
+        "topic": "payment_methods",
+        "section": "Structure and Rules for Partial Payments"
+      }
+    },
+    {
+      "chunk_id": "partial_payment_terms_02",
+      "source": "payment_methods/partial_payment_terms.md",
+      "topic": "payment_methods",
+      "section": "Mandatory Conditions for Partial Payments",
+      "text": "1. Request Allowance: The seller or request terms must explicitly permit partial payments (`partial_payment_allowed = True`).\n2. User Acceptance: The user's preferences must accept partial payments.\n3. Strict Two-Payment Structure:\n   - Payment 1: Exactly `amount_safe_to_pay` on `request_date`.\n   - Payment 2: Exactly `requested_amount - amount_safe_to_pay` on `earliest_date_for_full_payment`.\n4. Deadline Adherence: The second payment date must arrive on or before the user's `desired_completion_date`.\n5. Sum Integrity: The two payments must strictly sum to the total requested amount.",
+      "metadata": {
+        "word_count": 75,
+        "source": "payment_methods/partial_payment_terms.md",
+        "topic": "payment_methods",
+        "section": "Mandatory Conditions for Partial Payments"
+      }
+    },
+    {
+      "chunk_id": "discretionary_vs_essential_01",
+      "source": "spending/discretionary_vs_essential.md",
+      "topic": "spending",
+      "section": "Differentiating Essential Commitments from Discretionary Spending",
+      "text": "# Differentiating Essential Commitments from Discretionary Spending\n\nFinancial sustainability requires a clear distinction between protected essentials and adjustable discretionary spending.",
+      "metadata": {
+        "word_count": 20,
+        "source": "spending/discretionary_vs_essential.md",
+        "topic": "spending",
+        "section": "Differentiating Essential Commitments from Discretionary Spending"
+      }
+    },
+    {
+      "chunk_id": "discretionary_vs_essential_02",
+      "source": "spending/discretionary_vs_essential.md",
+      "topic": "spending",
+      "section": "Protected Categories",
+      "text": "Categories such as rent, mortgage, basic utilities, mandatory insurance, and healthcare are strictly protected. They cannot be cancelled, stopped, or scaled down to accommodate new lifestyle purchases.",
+      "metadata": {
+        "word_count": 27,
+        "source": "spending/discretionary_vs_essential.md",
+        "topic": "spending",
+        "section": "Protected Categories"
+      }
+    },
+    {
+      "chunk_id": "discretionary_vs_essential_03",
+      "source": "spending/discretionary_vs_essential.md",
+      "topic": "spending",
+      "section": "Discretionary Categories",
+      "text": "Expenditures on dining out, luxury subscriptions, electronics upgrades, and entertainment represent flexible lifestyle choices. These categories provide an available lever when an essential or high-priority goal requires short-term cash flow adjustments.",
+      "metadata": {
+        "word_count": 31,
+        "source": "spending/discretionary_vs_essential.md",
+        "topic": "spending",
+        "section": "Discretionary Categories"
+      }
+    },
+    {
+      "chunk_id": "reducing_flexible_expenses_01",
+      "source": "spending/reducing_flexible_expenses.md",
+      "topic": "spending",
+      "section": "Modifying Flexible Spending to Enable Purchase Goals",
+      "text": "# Modifying Flexible Spending to Enable Purchase Goals\n\nWhen a requested purchase is unaffordable under current spending trajectories, making disciplined spending adjustments can safely unlock the necessary headroom.",
+      "metadata": {
+        "word_count": 28,
+        "source": "spending/reducing_flexible_expenses.md",
+        "topic": "spending",
+        "section": "Modifying Flexible Spending to Enable Purchase Goals"
+      }
+    },
+    {
+      "chunk_id": "reducing_flexible_expenses_02",
+      "source": "spending/reducing_flexible_expenses.md",
+      "topic": "spending",
+      "section": "Permitted Adjustment Actions",
+      "text": "- `stop:<event_id>`: Cease an upcoming non-essential recurring subscription or lifestyle service completely.\n- `reduce_to:<event_id>:<new_amount>`: Scale down an upcoming discretionary debit to a lower permitted floor.",
+      "metadata": {
+        "word_count": 25,
+        "source": "spending/reducing_flexible_expenses.md",
+        "topic": "spending",
+        "section": "Permitted Adjustment Actions"
+      }
+    },
+    {
+      "chunk_id": "reducing_flexible_expenses_03",
+      "source": "spending/reducing_flexible_expenses.md",
+      "topic": "spending",
+      "section": "Strict Governance Rules",
+      "text": "1. User Consent: Adjustments are exclusively permitted in categories the user has explicitly consented to adjust (`expense_categories_user_is_willing_to_stop` and `expense_categories_user_is_willing_to_reduce`).\n2. Absolute Floor Protection: No spending category can ever be reduced below its established minimum allowed amount.\n3. Limited Action Budget: A maximum of three total spending interventions may be recommended for any single purchase request.",
+      "metadata": {
+        "word_count": 55,
+        "source": "spending/reducing_flexible_expenses.md",
+        "topic": "spending",
+        "section": "Strict Governance Rules"
+      }
+    },
+    {
+      "chunk_id": "subscription_audits_01",
+      "source": "spending/subscription_audits.md",
+      "topic": "spending",
+      "section": "Auditing Recurring Subscriptions and Digital Services",
+      "text": "# Auditing Recurring Subscriptions and Digital Services\n\nRecurring micro-transactions\u2014such as streaming services, cloud storage, gaming memberships, and gym subscriptions\u2014can silently erode available cash flow.",
+      "metadata": {
+        "word_count": 24,
+        "source": "spending/subscription_audits.md",
+        "topic": "spending",
+        "section": "Auditing Recurring Subscriptions and Digital Services"
+      }
+    },
+    {
+      "chunk_id": "subscription_audits_02",
+      "source": "spending/subscription_audits.md",
+      "topic": "spending",
+      "section": "Audit Strategy",
+      "text": "- Flagging Low-Utility Charges: Periodic review of automated debits reveals services with low usage that are eligible for immediate cancellation.\n- Impact on Debt Capacity: Reallocating \\$30-\\$50 in monthly recurring subscriptions creates equivalent headroom to service an affordable short-term installment plan without stressing daily liquidity.",
+      "metadata": {
+        "word_count": 45,
+        "source": "spending/subscription_audits.md",
+        "topic": "spending",
+        "section": "Audit Strategy"
+      }
+    }
+  ]
+}

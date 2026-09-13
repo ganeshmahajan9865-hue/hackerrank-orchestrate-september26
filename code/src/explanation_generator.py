@@ -1,4 +1,4 @@
-﻿"""
+"""
 Explanation Generator Module
 
 Generates concise, factual 2-sentence justifications grounded strictly in computed facts.
@@ -21,14 +21,14 @@ from src.payment_plans import format_amount
 class ExplanationGenerator:
     """Generates grounded natural-language explanations for financial recommendations."""
 
-    def __init__(self):
-        pass
+    def __init__(self, rag_pipeline: Optional[Any] = None):
+        self.rag_pipeline = rag_pipeline
+        self.last_used_sources: List[str] = []
 
     def _format_date(self, date_str: str) -> str:
         """Formats YYYY-MM-DD into human readable date, e.g. 8 August 2025."""
         try:
             dt = datetime.date.fromisoformat(date_str)
-            # e.g. 8 August 2025
             return f"{dt.day} {dt.strftime('%B')} {dt.year}"
         except Exception:
             return date_str
@@ -63,8 +63,8 @@ class ExplanationGenerator:
         else:
             return "; ".join(action_phrases)
 
-    def generate(self, ctx: RequestContext, result: DecisionResult) -> str:
-        """Generates grounded explanation based on decision facts."""
+    def _generate_template(self, ctx: RequestContext, result: DecisionResult) -> str:
+        """Deterministic rule-based explanation template."""
         curr = ctx.profile.home_currency
         req_amt = ctx.requested_amount
         min_bal = ctx.profile.minimum_balance_to_keep
@@ -129,3 +129,36 @@ class ExplanationGenerator:
                 f"Do not make this payment by {human_deadline}. "
                 f"None of the available options keeps the {curr} {format_amount(min_bal)} minimum protected."
             )
+
+    def generate(self, ctx: RequestContext, result: DecisionResult) -> str:
+        """Generates grounded explanation, using RAG if enabled, with automatic template fallback."""
+        fallback_exp = self._generate_template(ctx, result)
+
+        if self.rag_pipeline and getattr(self.rag_pipeline, 'enabled', False):
+            try:
+                # Extract request type if present in request context
+                req_row = ctx.request_row if hasattr(ctx, 'request_row') else {}
+                req_type = str(req_row.get('request_type', '')) if isinstance(req_row, dict) else ''
+
+                rag_res = self.rag_pipeline.generate_explanation(
+                    request_id=str(result.request_id),
+                    currency=ctx.profile.home_currency,
+                    requested_amount=ctx.requested_amount,
+                    amount_safe_to_pay=result.amount_safe_to_pay,
+                    affordability_status=result.affordability_status,
+                    recommended_payment_method=result.recommended_payment_method,
+                    payment_plan=result.payment_plan,
+                    earliest_date_for_full_payment=result.earliest_date_for_full_payment,
+                    spending_changes_needed=result.spending_changes_needed,
+                    minimum_balance_to_keep=ctx.profile.minimum_balance_to_keep,
+                    request_type=req_type,
+                    fallback_template_explanation=fallback_exp
+                )
+                self.last_used_sources = rag_res.used_sources
+                return rag_res.explanation
+            except Exception as e:
+                self.last_used_sources = []
+                return fallback_exp
+
+        self.last_used_sources = []
+        return fallback_exp

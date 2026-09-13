@@ -37,9 +37,10 @@ from src.decision_engine import DecisionEngine
 from src.explanation_generator import ExplanationGenerator
 from src.validator import OutputValidator
 from src.output_writer import OutputWriter
+from src.rag.rag_pipeline import RAGPipeline
 
 
-def run_pipeline(data_dir: str = 'dataset', output_path: str = 'output.csv') -> pd.DataFrame:
+def run_pipeline(data_dir: str = 'dataset', output_path: str = 'output.csv', use_rag: bool = True) -> pd.DataFrame:
     start_time = time.time()
     print("=" * 70)
     print("BUY OR WAIT? — FINANCIAL AFFORDABILITY DECISION SYSTEM")
@@ -76,7 +77,32 @@ def run_pipeline(data_dir: str = 'dataset', output_path: str = 'output.csv') -> 
     forecast_engine = ForecastEngine(forecast_days=90, conservative_buffer=1.0)
     plan_engine = PaymentPlanEngine()
     decision_engine = DecisionEngine(forecast_engine, plan_engine)
-    explanation_gen = ExplanationGenerator()
+
+    # Initialize RAG Pipeline
+    rag_pipeline = None
+    if use_rag:
+        print("\n[RAG Subsystem] Initializing RAG Knowledge Base and Vector Index...")
+        try:
+            k_dir = 'knowledge'
+            if not os.path.exists(k_dir):
+                for cand in [
+                    '../knowledge',
+                    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge'),
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'knowledge')
+                ]:
+                    if os.path.exists(cand):
+                        k_dir = cand
+                        break
+            
+            idx_file = os.path.join(k_dir, 'index.json')
+            rag_pipeline = RAGPipeline(knowledge_dir=k_dir, index_path=idx_file, enabled=True)
+            chunk_count = rag_pipeline.build_index(force_rebuild=False)
+            print(f"  RAG Vector Store ready: {chunk_count} knowledge chunks indexed from '{k_dir}'.")
+        except Exception as e:
+            print(f"  Warning: RAG initialization failed ({e}). Proceeding with deterministic fallback.")
+            rag_pipeline = None
+
+    explanation_gen = ExplanationGenerator(rag_pipeline=rag_pipeline)
     validator = OutputValidator(joiner)
     writer = OutputWriter()
 
@@ -129,9 +155,7 @@ def run_pipeline(data_dir: str = 'dataset', output_path: str = 'output.csv') -> 
     # 7. Write Output Files
     print(f"\n[Stage 16] Writing output files...")
     target_locations = [
-        output_path,
-        os.path.join(data_dir, 'output.csv'),
-        os.path.join('output', 'output.csv')
+        output_path
     ]
 
     for loc in target_locations:
@@ -141,9 +165,27 @@ def run_pipeline(data_dir: str = 'dataset', output_path: str = 'output.csv') -> 
         except Exception as e:
             if loc == output_path:
                 raise
-            print(f"  Note: Could not write optional copy to {loc}: {e}")
+    # 8. Supabase Cloud Sync & Telemetry
+    try:
+        from src.supabase_client import get_supabase_adapter
+        supabase = get_supabase_adapter()
+        if supabase.is_available:
+            print("\n[Supabase Integration] Syncing predictions and run telemetry to Supabase cloud...")
+            synced = supabase.sync_predictions(df_output)
+            print(f"  Synced {synced} prediction rows to Supabase.")
+            supabase.log_run(
+                run_name="Full Dataset Evaluation",
+                total_requests=total_requests,
+                metrics={
+                    "execution_time_seconds": round(time.time() - start_time, 2),
+                    "status_distribution": df_output['affordability_status'].value_counts().to_dict(),
+                    "method_distribution": df_output['recommended_payment_method'].value_counts().to_dict()
+                }
+            )
+    except Exception as e:
+        print(f"  Note: Supabase sync skipped: {e}")
 
-    # 8. Report Summary
+    # 9. Report Summary
     elapsed = time.time() - start_time
     print("\n" + "=" * 70)
     print("PIPELINE EXECUTION SUMMARY")
@@ -155,9 +197,10 @@ def run_pipeline(data_dir: str = 'dataset', output_path: str = 'output.csv') -> 
     print("\nRecommended Payment Method Distribution:")
     print(df_output['recommended_payment_method'].value_counts().to_string())
     print("=" * 70)
+    return df_output
 
-def main():
-    return run_pipeline()
+def main(use_rag: bool = True):
+    return run_pipeline(use_rag=use_rag)
 
 
 if __name__ == '__main__':

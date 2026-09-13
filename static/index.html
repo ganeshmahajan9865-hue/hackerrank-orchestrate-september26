@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy or Wait? — AI Financial Affordability Dashboard</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-border: #334155;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --card-bg: #1e293b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 24px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--surface-border); }
+        h1 { font-size: 1.6rem; color: var(--primary); }
+        .badge { padding: 4px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-healthy { background: rgba(52, 211, 153, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-offline { background: rgba(248, 113, 113, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .card { background: var(--card-bg); border: 1px solid var(--surface-border); border-radius: 12px; padding: 20px; }
+        h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--primary); }
+        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+        select, input, button { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--surface-border); background: #0f172a; color: var(--text); font-size: 0.9rem; margin-bottom: 14px; }
+        button { background: var(--primary); color: #0f172a; font-weight: 600; cursor: pointer; transition: background 0.2s; border: none; }
+        button:hover { background: var(--primary-hover); }
+        .result-box { background: #0f172a; border-radius: 8px; padding: 14px; border: 1px solid var(--surface-border); min-height: 180px; font-size: 0.85rem; overflow-x: auto; }
+        .status-pill { display: inline-block; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
+        .status-affordable_now { background: rgba(52, 211, 153, 0.2); color: var(--success); }
+        .status-affordable_with_plan { background: rgba(56, 189, 248, 0.2); color: var(--primary); }
+        .status-affordable_later { background: rgba(251, 191, 36, 0.2); color: var(--warning); }
+        .status-not_affordable { background: rgba(248, 113, 113, 0.2); color: var(--danger); }
+        .system-status { display: flex; gap: 16px; font-size: 0.85rem; }
+        .system-status span { display: flex; align-items: center; gap: 6px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .dot-green { background: var(--success); }
+        .dot-amber { background: var(--warning); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--surface-border); }
+        th { color: var(--text-muted); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Buy or Wait? AI Financial Agent</h1>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Deterministic 90-Day Cash Flow, RAG Guidance & Supabase Integration</p>
+            </div>
+            <div class="system-status" id="system-status">
+                <span><span class="dot dot-green"></span> API Online</span>
+                <span id="supabase-pill"><span class="dot dot-amber"></span> Checking Supabase...</span>
+                <span id="gemini-pill"><span class="dot dot-amber"></span> Checking Gemini...</span>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Left: Financial Affordability Decision -->
+            <div class="card">
+                <h2>1. Financial Affordability Decision</h2>
+                <label for="request-select">Select Evaluation Request:</label>
+                <select id="request-select">
+                    <option value="request_01">request_01 (User 01 - ZAR 25,256)</option>
+                    <option value="request_02">request_02 (User 02 - IDR 47,858,720)</option>
+                    <option value="request_03">request_03 (User 03 - INR 42,750)</option>
+                    <option value="request_05">request_05 (User 05 - INR 15,488)</option>
+                    <option value="request_26">request_26 (User 26 - IDR 15,656,000)</option>
+                </select>
+                <button onclick="evaluateDecision()">Run Decision Engine (POST /api/decide)</button>
+                
+                <div class="result-box" id="decision-result">
+                    <p style="color: var(--text-muted);">Click button to evaluate request through the 90-day cash flow forecast and RAG pipeline.</p>
+                </div>
+            </div>
+
+            <!-- Right: What-If Purchase Simulator -->
+            <div class="card">
+                <h2>2. What-If Purchase & Payment Simulator</h2>
+                <label for="sim-request">Base Request Context:</label>
+                <select id="sim-request">
+                    <option value="request_01">request_01 (ZAR)</option>
+                    <option value="request_26">request_26 (IDR)</option>
+                </select>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label for="sim-amount">Hypothetical Amount:</label>
+                        <input type="number" id="sim-amount" value="20000" step="1000">
+                    </div>
+                    <div>
+                        <label for="sim-method">Forced Payment Method:</label>
+                        <select id="sim-method">
+                            <option value="full_payment">Full Payment</option>
+                            <option value="wait">Wait for Safe Date</option>
+                            <option value="installments">Installments</option>
+                            <option value="partial_payment">Partial Payment</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="runSimulation()">Run What-If Simulation (POST /api/simulate)</button>
+
+                <div class="result-box" id="simulation-result">
+                    <p style="color: var(--text-muted);">Test different purchase amounts and payment methods without modifying original data.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom: Supabase Cloud Telemetry & History -->
+        <div class="card" style="margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>3. Cloud Persistence & Telemetry (GET /api/history)</h2>
+                <button style="width: auto; padding: 6px 14px; font-size: 0.8rem;" onclick="loadHistory()">Refresh Supabase History</button>
+            </div>
+            <div class="result-box" id="history-result" style="min-height: 120px;">
+                <p style="color: var(--text-muted);">Loading historical records from Supabase...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchHealth() {
+            try {
+                const res = await fetch('/api/health');
+                const data = await res.json();
+                
+                const sbPill = document.getElementById('supabase-pill');
+                if (data.supabase && data.supabase.connected) {
+                    sbPill.innerHTML = '<span class="dot dot-green"></span> Supabase Connected';
+                } else {
+                    sbPill.innerHTML = '<span class="dot dot-amber"></span> Supabase Offline';
+                }
+
+                const gmPill = document.getElementById('gemini-pill');
+                if (data.gemini && data.gemini.status === 'active') {
+                    gmPill.innerHTML = '<span class="dot dot-green"></span> Gemini Active';
+                } else {
+                    gmPill.innerHTML = '<span class="dot dot-amber"></span> Gemini Offline';
+                }
+            } catch (err) {
+                console.warn('Health check failed:', err);
+            }
+        }
+
+        async function evaluateDecision() {
+            const reqId = document.getElementById('request-select').value;
+            const resBox = document.getElementById('decision-result');
+            resBox.innerHTML = '<p style="color: var(--text-muted);">Executing 90-day forecast & RAG explanation...</p>';
+
+            try {
+                const res = await fetch('/api/decide', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ request_id: reqId })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    resBox.innerHTML = `
+                        <div style="margin-bottom: 8px;">
+                            <span class="status-pill status-${data.affordability_status}">${data.affordability_status.toUpperCase()}</span>
+                            <span style="font-weight: 600; margin-left: 8px;">via ${data.recommended_payment_method}</span>
+                        </div>
+                        <p><strong>Amount Safe to Pay Today:</strong> ${data.currency} ${data.amount_safe_to_pay.toLocaleString()}</p>
+                        <p><strong>Earliest Full Safe Date:</strong> ${data.earliest_date_for_full_payment || 'N/A'}</p>
+                        <p><strong>Payment Plan:</strong> <code>${data.payment_plan}</code></p>
+                        <p><strong>Spending Changes Needed:</strong> <code>${data.spending_changes_needed}</code></p>
+                        <p style="margin-top: 8px; font-style: italic; color: #bae6fd;">"${data.decision_explanation}"</p>
+                        <p style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">Synced to Supabase: ${data.synced_to_supabase ? 'Yes' : 'No'}</p>
+                    `;
+                } else {
+                    resBox.innerHTML = `<p style="color: var(--danger);">Error: ${data.detail || 'Failed to evaluate'}</p>`;
+                }
+            } catch (err) {
+                resBox.innerHTML = `<p style="color: var(--danger);">Network Error: ${err.message}</p>`;
+            }
+        }
+
+        async function runSimulation() {
+            const reqId = document.getElementById('sim-request').value;
+            const amt = parseFloat(document.getElementById('sim-amount').value);
+            const method = document.getElementById('sim-method').value;
+            const resBox = document.getElementById('simulation-result');
+            resBox.innerHTML = '<p style="color: var(--text-muted);">Simulating cash flow across scenarios...</p>';
+
+            try {
+                const res = await fetch('/api/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        request_id: reqId,
+                        scenarios: [
+                            { purchase_amount: amt, payment_method: method, scenario_label: `Custom ${method}` },
+                            { purchase_amount: amt, payment_method: 'wait', scenario_label: 'Wait Baseline' },
+                            { purchase_amount: amt * 0.75, payment_method: method, scenario_label: 'Reduced 25%' }
+                        ]
+                    })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    let tableRows = data.scenarios.map(s => `
+                        <tr>
+                            <td><strong>${s.scenario_label}</strong></td>
+                            <td>${s.purchase_amount.toLocaleString()}</td>
+                            <td><span class="status-pill status-${s.affordability_status}">${s.affordability_status}</span></td>
+                            <td>${s.amount_safe_to_pay.toLocaleString()}</td>
+                            <td>${s.minimum_projected_balance.toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+
+                    resBox.innerHTML = `
+                        <p><strong>Ranked Recommendation:</strong> ${data.comparison_summary}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Scenario</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Safe Today</th>
+                                    <th>Min Buffer</th>
+                                </tr>
+                            </thead>
+                            <tbody>${tableRows}</tbody>
+                        </table>
+                        <p style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">Saved to Supabase: ${data.saved_to_supabase ? 'Yes' : 'No'}</p>
+                    `;
+                } else {
+                    resBox.innerHTML = `<p style="color: var(--danger);">Error: ${data.detail || 'Simulation failed'}</p>`;
+                }
+            } catch (err) {
+                resBox.innerHTML = `<p style="color: var(--danger);">Network Error: ${err.message}</p>`;
+            }
+        }
+
+        async function loadHistory() {
+            const histBox = document.getElementById('history-result');
+            try {
+                const res = await fetch('/api/history?limit=5');
+                const data = await res.json();
+                if (data.records && data.records.length > 0) {
+                    let rows = data.records.map(r => `
+                        <tr>
+                            <td>${r.request_id || 'N/A'}</td>
+                            <td>${r.scenarios_count || 1} scenarios</td>
+                            <td><strong>${r.best_scenario_label || r.best_payment_method || 'Optimal'}</strong></td>
+                            <td><span class="status-pill status-${r.best_affordability_status || 'affordable_now'}">${r.best_affordability_status || 'verified'}</span></td>
+                            <td>${r.created_at ? new Date(r.created_at).toLocaleTimeString() : 'Recent'}</td>
+                        </tr>
+                    `).join('');
+                    histBox.innerHTML = `
+                        <table>
+                            <thead><tr><th>Request</th><th>Scenarios</th><th>Top Pick</th><th>Status</th><th>Timestamp</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    `;
+                } else {
+                    histBox.innerHTML = `<p style="color: var(--text-muted);">No history records found or running in offline mode (${data.source}).</p>`;
+                }
+            } catch (err) {
+                histBox.innerHTML = `<p style="color: var(--text-muted);">Could not load history: ${err.message}</p>`;
+            }
+        }
+
+        // Initialize on page load
+        fetchHealth();
+        loadHistory();
+    </script>
+</body>
+</html>
